@@ -1,11 +1,16 @@
 import { IRootState } from "@/redux/store";
+import { DefaultEventsMap } from "@/types/Chat";
 import Link from "next/link";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Socket, io } from "socket.io-client";
+
 
 const Sidebar = () => {
 
   const { role } = useSelector((state: IRootState)=> state.userStore.mainUser);
+
+
 
   // sideBarMenuItems
   const asideMenu = [
@@ -44,22 +49,6 @@ const Sidebar = () => {
   </svg>),
   href:'/appointment',
   },
-  // {
-  //   key:'in1b',
-  //   name: 'Inbox',
-  //   icon: (<svg
-  //     className="flex-shrink-0 w-5 h-5 text-green-500 transition duration-75 dark:text-green-400 group-hover:text-green-900 dark:group-hover:text-white"
-  //     aria-hidden="true"
-  //     xmlns="http://www.w3.org/2000/svg"
-  //     fill="currentColor"
-  //     viewBox="0 0 20 20"
-  //   >
-  //     <path d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
-  //   </svg>
-  //   ),
-  //   href:'#',
-
-  // },
   {
     key:'us1b',
     name: 'Users',
@@ -89,16 +78,47 @@ const Sidebar = () => {
     </svg>
     ),
     href:'/vaccine',
+  },
+  {
+    key:'pr1b',
+    name: 'Feedback',
+    icon: (<svg
+      className="flex-shrink-0 w-5 h-5 text-green-500 transition duration-75 dark:text-green-400 group-hover:text-green-900 dark:group-hover:text-white"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+      viewBox="0 0 18 20"
+    >
+      <path d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z" />
+    </svg>
+    ),
+    href:'/feedbacks',
+  },
+  {
+    key:'pr7b',
+    name: 'Chat',
+    icon: (<svg
+      className="flex-shrink-0 w-5 h-5 text-green-500 transition duration-75 dark:text-green-400 group-hover:text-green-900 dark:group-hover:text-white"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+      viewBox="0 0 18 20"
+    >
+      <path d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z" />
+    </svg>
+    ),
+    href:'/support',
   }
-]
+];
 
   return (
     <aside
       id="default-sidebar"
       className="xl:mt-0 sm:mt-[4.68rem] z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 hidden xl:block"
       aria-label="Sidebar"
+      style={{height: "93vh"}}
     >
-      <div className="h-full px-3 py-4 overflow-y-auto bg-green-700">
+      <div className="h-full px-3 py-4 overflow-y-auto bg-green-700 ">
         <ul className="space-y-2 font-medium">
           {asideMenu.map((item) => (
             <li className={`${role == 'user' && (item.name == 'Users' || item.name == 'Vaccines') && "hidden" }`} key={item.key}>

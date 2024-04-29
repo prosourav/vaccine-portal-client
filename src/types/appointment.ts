@@ -63,7 +63,7 @@ export interface tablePropType {
   setCurrentItem:  (data: SetStateAction<string>) => void;
   setPagination: (data: SetStateAction<paginationType>) => void;
   modalVisible: { view: boolean; delete: boolean; edit: boolean, create: boolean, role: boolean};
-  setModalVisible: (data: SetStateAction<{ view: boolean; delete: boolean; edit: boolean; create: boolean, role: boolean }>) => void;
+  setModalVisible: (data: SetStateAction<{ view: boolean; delete: boolean; edit: boolean; create: boolean, role: boolean, review:boolean }>) => void;
 };
 export interface userTablePropType {
   data: UsersPropType[],
@@ -76,8 +76,8 @@ export interface userTablePropType {
   setCurrentItem:  (data: SetStateAction<string>) => void;
   isLoading: boolean
   setPagination: (data: SetStateAction<paginationType>) => void;
-  modalVisible: { view: boolean; delete: boolean; edit: boolean, create: boolean; role: boolean };
-  setModalVisible: (data: SetStateAction<{ view: boolean; delete: boolean; edit: boolean; create: boolean, role: boolean }>) => void;
+  modalVisible: { view: boolean; delete: boolean; edit: boolean, create: boolean; role: boolean, review:boolean };
+  setModalVisible: (data: SetStateAction<{ view: boolean; delete: boolean; edit: boolean; create: boolean, role: boolean, review:boolean }>) => void;
   next?: number
   isSuccess:boolean;
   isError:boolean
@@ -93,6 +93,6 @@ export interface rowDataType {
 }
 
 export interface ChildComponentProps {
-  setModalVisible: (data: SetStateAction<{ view: boolean; delete: boolean; edit: boolean; create: boolean, role:boolean }>) => void;
+  setModalVisible: (data: SetStateAction<{ view: boolean; delete: boolean; edit: boolean; create: boolean, role:boolean, review: boolean }>) => void;
   currentItem: string
 }

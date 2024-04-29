@@ -8,6 +8,7 @@ import authService from "@/services/authService";
 import { setAvailabilityState } from "@/redux/availabilitySlice";
 import { useRouter } from "next/router";
 import { IRootState } from "@/redux/store";
+import { initialState, setChatState } from "@/redux/chatSlice";
 
 
 const Header = () => {
@@ -31,6 +32,7 @@ const Header = () => {
       Cookies.remove('id');
       dispatch(setUserState({}));
       dispatch(setAvailabilityState({}));
+      dispatch(setChatState(initialState));
       router.push('/');
     } catch (error) {
       console.log(error);
@@ -39,6 +41,7 @@ const Header = () => {
       Cookies.remove('id');
       dispatch(setUserState({}));
       dispatch(setAvailabilityState({}));
+      dispatch(setChatState(initialState));
     }
 
   };
@@ -46,7 +49,7 @@ const Header = () => {
 
   return (
     <>
-      <div className="bg-green-800 h-full w-full z-50">
+      <div className="bg-green-800 w-full z-50">
         <nav className="bg-green shadow xl:block hidden">
           <div className="mx-auto container px-6 py-2 xl:py-0">
             <div className="flex items-center justify-between">

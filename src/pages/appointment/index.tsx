@@ -13,13 +13,15 @@ import AppointmentDetails from '@/components/AppointmentDetails';
 import AppointmentEdit from '@/components/AppointmentEdit';
 import { ChakraModal } from '@/components/ChakraModal';
 import DeleteConfirmation from '@/components/DeleteAppointment';
+import CreateReview from '@/components/CreateReview';
 
+const appointmentModalDefault = { view: false, delete: false, edit: false, create: false, role: false, review: false };
 
 const Appointments = () => {
   const [pagination, setPagination] = useState(defaultPagination);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [currentItem, setCurrentItem] = useState('');
-  const [modalVisible, setModalVisible] = useState({ view: false, delete: false, edit: false, create: false, role: false });
+  const [modalVisible, setModalVisible] = useState({...appointmentModalDefault});
   const { operation } = useSelector((state: IRootState) => state.appointmentStore);
   const { role } = useSelector((state: IRootState) => state.userStore.mainUser);
 
@@ -31,8 +33,7 @@ const Appointments = () => {
     return appointmentService.getAllAppointments(query);
   }, [pagination.page, pagination.limit, pagination.sort_by, pagination.sort_type, pagination.search, pagination.status, operation]);
 
-  const { data, error, isLoading, isError, isSuccess } =
-    useFetch(getAllAppointments);
+  const { data, error, isLoading, isError, isSuccess } = useFetch(getAllAppointments);
 
   const onChangeSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.value.trim();
@@ -40,7 +41,7 @@ const Appointments = () => {
     // Clear any previous timeout
     if (debounceTimeoutRef.current !== null) {
       clearTimeout(debounceTimeoutRef.current);
-    }
+    };
 
     // Set a new timeout to debounce the search
     debounceTimeoutRef.current = setTimeout(() => {
@@ -50,7 +51,7 @@ const Appointments = () => {
 
 
   return (
-    <>
+    <div style={{height:'86vh', overflowY:'auto'}}>
       <ChakraModal
         isOpen={modalVisible.view}
         onClose={() => {
@@ -82,7 +83,16 @@ const Appointments = () => {
 
       </ChakraModal>
 
-    <div className=' bg-slate-100 mx-auto my-12 w-11/12 rounded-lg'>
+      <ChakraModal
+        isOpen={modalVisible.review}
+        onClose={() => {
+          setModalVisible(prv => ({ ...prv, ['review']: false }));
+        }}
+      >
+        <CreateReview {...{ currentItem, setModalVisible }} />
+      </ChakraModal>
+
+    <div className=' bg-slate-100 mx-auto my-6 w-11/12 rounded-lg'>
       <div className='flex justify-between items-center mb-1 px-4 bg-white'>
         <Text as='b' className='p-4'>All Appointments</Text>
         <div className='flex w-2/3'>
@@ -101,7 +111,6 @@ const Appointments = () => {
             <Select onChange={({ target }) => setPagination(prv => ({ ...prv, page: 1, status: target.value as "all" }))}>
               {vaccineStatus.map((item, id) => (
                 <option value={item.toLowerCase()} key={id}>{item}</option>))}
-
             </Select>
           </div>
         </div>
@@ -113,7 +122,7 @@ const Appointments = () => {
         isLoading={isLoading}
         links={data?.links} modalVisible={modalVisible} setModalVisible={setModalVisible} />
     </div>
-    </>
+    </div>
 
   );
 };

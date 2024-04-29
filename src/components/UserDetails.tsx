@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ChildComponentProps } from '@/types/appointment';
 import useFetch from '@/hooks/useFetch';
 import moment from 'moment';
-import vaccines from '@/constants/vaccines';
 import { IRootState } from '@/redux/store';
 import userService from '@/services/userService';
 import { capitalizeFirstLetter } from '@/utils/convertToCap';

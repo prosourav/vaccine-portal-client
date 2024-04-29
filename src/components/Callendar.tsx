@@ -33,12 +33,13 @@ const eventStyleGetter = (event: Event) => {
 };
 
 const Calendar: React.FC<CustomCalendarProps> = ({ events, handleEventClick }) => {
+
   return (
-    <div className="bg-white px-4 shadow-md rounded-md">
+    <div className="bg-white px-4 shadow-md rounded-md pb-2">
       <h1 className="text-2xl font-bold mb-4 p-2">Appointment Calendar</h1>
       <div className="sm:hidden ">
         {/* For mobile screens */}
-        <BigCalendar
+        {/* <BigCalendar
           localizer={localizer}
           events={events}
           views={[Views.MONTH]}
@@ -47,11 +48,11 @@ const Calendar: React.FC<CustomCalendarProps> = ({ events, handleEventClick }) =
           endAccessor="end"
           style={{ height: 400 }}
           eventPropGetter={eventStyleGetter}
-        />
+        /> */}
       </div>
       <div className="hidden sm:block md:hidden">
         {/* For tablets */}
-        <BigCalendar
+        {/* <BigCalendar
           localizer={localizer}
           events={events}
           views={[Views.MONTH]}
@@ -60,7 +61,7 @@ const Calendar: React.FC<CustomCalendarProps> = ({ events, handleEventClick }) =
           endAccessor="end"
           style={{ height: 500 }}
           eventPropGetter={eventStyleGetter}
-        />
+        /> */}
       </div>
       <div className="hidden md:block">
         {/* For desktop */}
@@ -71,7 +72,7 @@ const Calendar: React.FC<CustomCalendarProps> = ({ events, handleEventClick }) =
           onSelectEvent={handleEventClick}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: 750 }}
+          style={{ height: 590 }}
           eventPropGetter={eventStyleGetter}
         />
       </div>

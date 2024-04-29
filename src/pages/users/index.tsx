@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 
 const UserListing = () => {
   const [pagination, setPagination] = useState({ ...defaultPagination });
-  const [modalVisible, setModalVisible] = useState({ view: false, delete: false, edit: false, create: false, role: false });
+  const [modalVisible, setModalVisible] = useState({ view: false, delete: false, edit: false, create: false, role: false, review: false });
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { role } = useSelector((state: IRootState) => state.userStore.mainUser);
   const [tableData, setTableData] = useState([] as UsersPropType[]);
@@ -49,7 +49,7 @@ const UserListing = () => {
       const updatedData = oldData.concat(newData);
       setTableData(updatedData);
     }
-  }, [data?.data])
+  }, [data?.data]);
 
 
   const onChangeSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -125,7 +125,7 @@ const UserListing = () => {
         <ChangeAdmin {...{ currentItem, setModalVisible }} />
       </ChakraModal> 
 
-    <div className=' mx-auto my-12 w-11/12 rounded-lg'>
+    <div className=' mx-auto my-6 w-11/12 rounded-lg'>
       <div className='flex justify-between items-center mb-1 px-4 bg-white'>
         <Text as='b' className='p-4'>All Users</Text>
         <div className='flex w-2/3'>

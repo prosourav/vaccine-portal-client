@@ -107,6 +107,11 @@ function Table({ data, pagination, setPagination,isLoading, links, setCurrentIte
     setModalVisible((prv) => ({ ...prv, ["edit"]: true }));
   };
 
+  const handleReview = (data: rowDataType) => {
+    setCurrentItem(data._id);
+    setModalVisible((prv) => ({ ...prv, ["review"]: true }));
+  };
+
   return (
     <div>
     
@@ -139,7 +144,7 @@ function Table({ data, pagination, setPagination,isLoading, links, setCurrentIte
         </thead>
         <tbody className='bg-white'>
           {!!data?.length ? table?.getRowModel().rows.map(row => (
-            <tr key={row.id} className=' h-10 py-3 border border-gray-200'>
+            <tr key={row.id} className=' h-10 py-2 border border-gray-200'>
               {row.getVisibleCells().map((cell, idx) => (
                 <td key={idx} className='text-center'>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -157,7 +162,7 @@ function Table({ data, pagination, setPagination,isLoading, links, setCurrentIte
 
                   {['user', 'admin'].includes(role) && <MenuItem isDisabled={row.original.status === 'complete' || isDisabled(row.original)} onClick={() => handleDelete(row.original)}>Delete</MenuItem>}
 
-                  {role === 'user' && <MenuItem isDisabled={row.original.status === 'pending'}>Add Review</MenuItem>}
+                  {role === 'user' && <MenuItem onClick={()=>handleReview(row.original)} isDisabled={row.original.status === 'pending'}>Add Review</MenuItem>}
 
                 </MenuList>
               </Menu>
@@ -174,7 +179,7 @@ function Table({ data, pagination, setPagination,isLoading, links, setCurrentIte
         </tbody>
 
       </table>
-      <div className='flex items-center py-2'>
+      <div className='flex items-center py-1'>
         <div className='ml-auto w-12/12 flex'>
           <div className='flex h-12 justify-center align-middle px-2'>
 

@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import Header from './Header';
-import Footer from './Footer';
 import { Inter } from 'next/font/google';
 import Sidebar from './Sidebar';
 import Cookies from 'js-cookie';
@@ -19,14 +18,14 @@ const Layout: React.FC<MyComponentProps> = ({ children }) => {
 
 
   return (
-    <div className='flex flex-col h-screen w-full'>
-      <Header />
-      <div className="flex flex-1">
+    <div className='flex flex-col w-full'>
+       <Header />
+       <div className="flex flex-1" >
         {getAccessToken() && <Sidebar />}
-        <main className={getAccessToken() ? 'flex-1' : 'w-full'}>
+         <main className={`${getAccessToken() ? 'flex-1' : 'w-full' }`} >
           {children}
         </main>
-      </div>
+      </div>  
       {/* <Footer /> */}
     </div>
   );

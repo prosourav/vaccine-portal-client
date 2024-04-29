@@ -5,10 +5,9 @@ class ProfileService {
   getProfile() {
     return requests.get('/users/profile'); 
   };
-  patchProfile(query: string){
-    return 
+  patchProfile(body: UserTypeSubmit){
+    return requests.patch('/users/profile',body);
   };
-
 };
 
 export default new ProfileService();

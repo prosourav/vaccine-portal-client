@@ -7,5 +7,6 @@ export interface UserType{
 export interface UserTypeSubmit{
     email: string
     password: string
-    status?: string 
+    status?: string
+    photo?: string 
 }

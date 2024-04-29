@@ -66,7 +66,7 @@ const columnHelper = createColumnHelper<VaccineType>()
 
   return (
     <div>
-      <div id="scrollableDiv"  style={{ overflowY: `${data?.length > 10 ? 'scroll' : 'hidden'}`, height: `480px`, background: 'white'  }}>
+      <div id="scrollableDiv"  style={{ overflowY: `${data?.length > 10 ? 'scroll' : 'hidden'}`, height: `520px`, background: 'white'  }}>
         <InfiniteScroll
           dataLength={data?.length}
           next={() => setPagination(prv => ({ ...prv, page: prv.page as string + 1 }))}

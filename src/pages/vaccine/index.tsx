@@ -71,14 +71,15 @@ const handleCreateModal = () =>{
         <CreateVaccine {...{ currentItem, setModalVisible }} />
       </ChakraModal> 
 
-    <div className=' mx-auto my-12 w-11/12 rounded-lg'>
+    <div className=' mx-auto my-6 w-11/12 rounded-lg'>
       <div className='flex justify-between items-center mb-1 px-4 bg-white'>
         <Text as='b' className='p-4'>All Vaccine</Text>
         <div className='flex w-2/3 '>
 
           <div className='w-2/6 ml-32'>
             <Select onChange={({ target }) => setPagination(prv => ({ ...prv, page:1, status: target.value as 'all' }))}>
-            <option value={'all'} >Vaccine</option>
+          <option value={'all'} >Status</option>
+
               {vaccineStatus.map((item, id) => (
                 <option value={item.toLowerCase()} key={id}>{item}</option>))}
             </Select>
@@ -87,7 +88,7 @@ const handleCreateModal = () =>{
 
           <div className='w-2/6 ml-10'>
             <Select onChange={({ target }) => setPagination(prv => ({ ...prv, page:1, name: target.value as 'all' }))}>
-          <option value={'all'} >Status</option>
+            <option value={'all'} >Vaccine</option>
               
               {vaccineOptions.map((item, id) => (
                 <option value={item.toLowerCase()} key={id}>{item}</option>))}

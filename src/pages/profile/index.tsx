@@ -1,14 +1,18 @@
 import useFetch from '@/hooks/useFetch';
 import profileService from '@/services/profileService';
+import { UserTypeSubmit } from '@/types/user';
 import { VaccineType } from '@/types/vaccine';
 import { EditIcon } from '@chakra-ui/icons';
-import { Button, Input } from '@chakra-ui/react';
+import { Button, Input, useToast } from '@chakra-ui/react';
 import Image from 'next/image';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { SetStateAction, useCallback, useEffect, useState } from 'react';
+
 
 const Profile: React.FC = () => {
   const [isDisable, setIsDisable] = useState({button: true, input: true});
   const [payload, setPayload] = useState({photo:'', email:''});
+  const toast = useToast();
+
 
   const getProfile = useCallback(() => {
     return profileService.getProfile();
@@ -16,7 +20,18 @@ const Profile: React.FC = () => {
 
   const { data, error, isLoading, isError, isSuccess } = useFetch(getProfile);
 
-  useEffect(()=>setPayload((prv)=>({...prv,email:data?.data?.email})),[data]);
+  useEffect(()=>setPayload((prv)=> ({...prv, ['email']: data?.data?.email})),[data?.data]);
+
+
+  useEffect(()=>{
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValidEmail = emailPattern.test(payload.email);
+
+    if(isValidEmail && data?.data?.email !== payload.email) {
+     return setIsDisable(prv=>({...prv, ['button']:false}));
+    };
+    return setIsDisable(prv=>({...prv, ['button']:true}));
+  },[payload.email]);
 
 
   if (isLoading) {
@@ -25,28 +40,35 @@ const Profile: React.FC = () => {
 
   if (isError) {
     return <div>Error fetching profile data</div>;
-  }
-
-  useEffect(() => {
-    if (payload.email) {
-        console.log("payload: ", payload);
-    }
-}, [payload?.email]);
-
-
-  const checkDisable = () => {
-    // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // const isValidEmail = emailPattern.test(e.target.value);
-    console.log(payload);
-
-    // if(isValidEmail && data?.data?.email !== e.target.value) {
-    //   setIsDisable(prv=>({...prv, ['button']:!prv.input}));
-    // };
   };
 
-  const handleSubmit = () => {
-    console.log(payload);
-  }
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if(e.target.value) {
+       setPayload((prv)=>({...prv, email: e.target.value}));
+      }
+  };
+
+  const handleSubmit = async() => {
+    try {
+     const response =  await profileService.patchProfile(payload as UserTypeSubmit);
+     setIsDisable((prv)=> ({...prv,['input']: true }));
+     toast({
+      title: response?.message,
+      position: 'top-right',
+      status: 'success',
+      isClosable: true,
+    });
+    } catch (error: any) {
+      toast({
+          title: error?.message,
+          position: 'top-right',
+          status: 'error',
+          isClosable: true,
+        });
+    }finally{
+      console.log("Got error");
+    }
+  };
 
   return (
     <div className="container mx-auto py-8">
@@ -73,7 +95,7 @@ const Profile: React.FC = () => {
             <div>
               <p className="text-lg font-semibold mb-2">Email</p>
               {/* <p className="text-gray-700">{data?.data?.email}</p> */}
-              <Input type='email' value={payload?.email} width={80} isDisabled={isDisable.input} onChange={(e)=> setPayload(prv=>({...prv, ['email']: e.target?.value}))}/>
+              <Input type='email' defaultValue={payload?.email} width={80} isDisabled={isDisable.input} onChange={handleChange}/>
               <EditIcon className='mx-2 cursor-pointer' w={5} h={5} onClick={()=>setIsDisable(prv=>({...prv, ['input']:!prv.input}))}/>
             </div>
             <div>
@@ -89,7 +111,7 @@ const Profile: React.FC = () => {
               <ul className="list-disc list-inside ">
                 {data?.data?.vaccines.map((vaccine: VaccineType) => (
                   <div key={vaccine._id} className="text-green">
-                    {vaccine.name} (Time {new Date(vaccine?.updatedAt as string).toLocaleString()})
+                    {vaccine.name} | {new Date(vaccine?.updatedAt as string).toLocaleString()}
                     <p>AppointmentId: 
                     <span className=' font-bold'>{`#${vaccine?.appointment}`}</span></p>
                   </div>
@@ -100,7 +122,9 @@ const Profile: React.FC = () => {
           </div>
 
           </div>
-          <Button className='float-right mb-8' colorScheme={'green'} isDisabled={isDisable?.button} onClick={handleSubmit}>
+          <Button className='float-right mb-8' colorScheme={'green'} isDisabled={isDisable?.button}
+           onClick={handleSubmit}
+           >
             Update
           </Button>    
         </div>

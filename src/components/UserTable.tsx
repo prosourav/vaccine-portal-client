@@ -125,7 +125,7 @@ const columnHelper = createColumnHelper<UsersPropType>()
 
   return (
     <div>
-      <div id="scrollableDiv"  style={{ overflowY: `${data?.length > 10 ? 'scroll' : 'hidden'}`, height: `480px`, background: 'white'  }}>
+      <div id="scrollableDiv"  style={{ overflowY: `${data?.length > 10 ? 'scroll' : 'hidden'}`, height: `520px`, background: 'white'  }}>
         <InfiniteScroll
           dataLength={data?.length}
           next={() => setPagination(prv => ({ ...prv, page: prv.page as string + 1 }))}
@@ -134,7 +134,7 @@ const columnHelper = createColumnHelper<UsersPropType>()
           endMessage={data?.length > 10 && !isLoading && <p className='text-center mx-auto bg-green-500 py-4 font-bold text-white'>No more data to load</p>}
           scrollableTarget="scrollableDiv"
         >
-          <table className='w-full border-x-neutral-100 border' >
+          <table className='w-full border-x-neutral-100 border ' >
             <thead className='bg-slate-100 z-10 '>
               {table?.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
