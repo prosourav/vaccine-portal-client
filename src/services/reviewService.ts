@@ -12,11 +12,11 @@ class ReviewService {
   };
 
   editReview(id: string, payload: Record<string, string>){
-    return requests.patch(`/review/${id}`, payload);
+    return requests.patch(`/reviews/${id}`, payload);
   };
 
   deleteReview(id: string){
-    return requests.delete(`/review/${id}`);
+    return requests.delete(`/reviews/${id}`);
   }
 
 };

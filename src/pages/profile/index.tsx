@@ -1,57 +1,95 @@
+import { defaultPhoto, initialDisable } from '@/constants/profile';
 import useFetch from '@/hooks/useFetch';
+import { IRootState } from '@/redux/store';
+import { setUserState } from '@/redux/userSlice';
+import imageService from '@/services/imageService';
 import profileService from '@/services/profileService';
+import { ImageType } from '@/types/Profile';
 import { UserTypeSubmit } from '@/types/user';
 import { VaccineType } from '@/types/vaccine';
 import { EditIcon } from '@chakra-ui/icons';
 import { Button, Input, useToast } from '@chakra-ui/react';
+import { saveAs } from 'file-saver';
 import Image from 'next/image';
-import React, { SetStateAction, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
+
+interface PreSignedUrl {
+  url: string;
+  // Add other properties if necessary
+}
 
 const Profile: React.FC = () => {
-  const [isDisable, setIsDisable] = useState({button: true, input: true});
+  const [isDisable, setIsDisable] = useState({...initialDisable});
   const [payload, setPayload] = useState({photo:'', email:''});
+  const [image, setImage] = useState({} as ImageType);
+  const [hovered, setHovered] = useState(false);
   const toast = useToast();
+  const user = useSelector((state:IRootState)=> state.userStore.mainUser);
+  const dispatch = useDispatch();
 
-
+  // setting ProfileData as Payload
   const getProfile = useCallback(() => {
     return profileService.getProfile();
   }, []);
 
   const { data, error, isLoading, isError, isSuccess } = useFetch(getProfile);
+  useEffect(() => setPayload((prv)=> ({...prv, ["photo"]:data?.data?.photo, ['email']: data?.data?.email})),[data?.data]);
 
-  useEffect(()=>setPayload((prv)=> ({...prv, ['email']: data?.data?.email})),[data?.data]);
+// Photo change
+  const handleFileChange = (e: any) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPayload((prv) => ({...prv, photo: reader?.result as string}));
+      setImage(prv=>({...prv, type:e.target.files[0].type, file :e.target.files[0]}))
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
+  // getting presigned url
+  const getPresignedUrl = useCallback(() => {
+    if(image.type) return imageService.getImageUrl(image.type);
+    return Promise.resolve(null);
+  }, [image.type]);
+
+  const { data: preSignedUrl } = useFetch(getPresignedUrl);
+  useEffect(() => { preSignedUrl && setImage({...image, url : (preSignedUrl as PreSignedUrl)?.url.split('?')[0]})},[preSignedUrl]);
 
 
+// onchange validation and enable disable input
   useEffect(()=>{
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isValidEmail = emailPattern.test(payload.email);
 
-    if(isValidEmail && data?.data?.email !== payload.email) {
+    if(isValidEmail && data?.data?.email !== payload.email || image.file) {
      return setIsDisable(prv=>({...prv, ['button']:false}));
     };
     return setIsDisable(prv=>({...prv, ['button']:true}));
-  },[payload.email]);
+  },[payload?.email, payload?.photo]);
 
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>Error fetching profile data</div>;
-  };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if(e.target.value) {
-       setPayload((prv)=>({...prv, email: e.target.value}));
-      }
+// onchange email 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if(e.target.value) {
+    setPayload((prv)=>({...prv, email: e.target.value}));
+    }
   };
 
   const handleSubmit = async() => {
+
     try {
-     const response =  await profileService.patchProfile(payload as UserTypeSubmit);
-     setIsDisable((prv)=> ({...prv,['input']: true }));
+      let submitPayload = {...payload};
+
+      if(image.file){
+        await imageService.uploadImage(image);
+        submitPayload = {...payload, photo: image.url};
+         const updatedUser = {...user, photo:image.url };
+        dispatch(setUserState(updatedUser));
+      };
+
+     const response =  await profileService.patchProfile(submitPayload as UserTypeSubmit);
+     setIsDisable({...initialDisable});
+     
      toast({
       title: response?.message,
       position: 'top-right',
@@ -65,26 +103,79 @@ const Profile: React.FC = () => {
           status: 'error',
           isClosable: true,
         });
-    }finally{
-      console.log("Got error");
-    }
+    };
   };
 
+  const handleDownload = async () => {
+   try {
+    const response = await profileService.generatePdf(data.data);
+
+    // Create a blob from the response data
+    const blob = new Blob([response], { type: 'application/pdf' });
+
+    // Create a URL for the blob
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link element and trigger download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'certificate.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    // Revoke the URL object to free up memory
+    window.URL.revokeObjectURL(url);
+   } catch (error) {
+    console.log(error);
+   }
+  }
+
+  // JSX part
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error fetching profile data</div>;
+  };
+  
+
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 bg-slate-50">
       <div className="max-w-6xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
         <div className="p-8">
-          <h1 className="text-3xl font-bold mb-4 pl-10">My Profile</h1>
+          <h1 className="text-3xl font-bold mb-4 pl-20 ">My Profile</h1>
           <div className='flex justify-center'>
-            <div className='px-10'>
-            <Image
-              width={120}
-              height={120}
-              className="rounded-full h-60 w-60 object-cover"
-              src="https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper.png"
-              alt="logo"
-            />
-            </div>
+
+    <div className='px-10'>
+      <label htmlFor="fileInput">
+        <div
+          className="relative w-50 h-50 " 
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        >
+          <div className={`${ hovered && "absolute cursor-pointer rounded-full inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"}`}>
+            <p className={`text-white  font-bold ${hovered ? '' : 'hidden'}`}>Change</p>
+          </div>
+          <Image
+            width={460}
+            height={460}
+            className="cursor-pointer rounded-full h-60 w-60 object-cover"
+            src={payload?.photo || defaultPhoto}
+            alt="logo"
+          />
+        </div>
+      </label>
+      <input
+        type='file'
+        id="fileInput"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+    </div>
+
          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ml-auto ">
           
@@ -118,15 +209,23 @@ const Profile: React.FC = () => {
                 ))}
               </ul>
             </div>
-
           </div>
 
           </div>
-          <Button className='float-right mb-8' colorScheme={'green'} isDisabled={isDisable?.button}
-           onClick={handleSubmit}
-           >
+
+          <div className='flex justify-end'>
+
+          <Button className='float-right mb-8 mr-2' colorScheme={'blue'} onClick={handleDownload}>
+            Download Certificate
+          </Button> 
+
+          <Button className='float-right mb-8' colorScheme={'green'}
+           isDisabled={isDisable?.button} onClick={handleSubmit}>
             Update
-          </Button>    
+          </Button> 
+          </div>
+  
+
         </div>
       </div>
     </div>
@@ -134,3 +233,4 @@ const Profile: React.FC = () => {
 };
 
 export default Profile;
+

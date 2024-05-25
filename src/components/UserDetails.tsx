@@ -103,9 +103,9 @@ const UserDetails = ({ setModalVisible, currentItem }: ChildComponentProps) => {
             {/* {console.log(data?.data?.vaccines)} */}
             <div className='flex align-middle'>
               {
-                !!data?.data?.vaccines.length ? data?.data?.vaccines.map((item: Record<string, string>, idx: number) => (
-                  <div className='flex'>
-                        <Tag size={'sm'} key={idx} variant='outline' className='mx-1 ' colorScheme='green'>
+                !!data?.data?.vaccines?.length ? data?.data?.vaccines.map((item: Record<string, string>, idx: number) => (
+                  <div key={idx} className='flex'>
+                        <Tag size={'sm'} variant='outline' className='mx-1 ' colorScheme='green'>
                              <TagLabel>{capitalizeFirstLetter(item.name)}</TagLabel>  
                         <p className='mx-2'> | {moment(item?.createdAt).format('DD-MM-YYYY')}</p>
 

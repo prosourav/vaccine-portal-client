@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import Cookies from 'js-cookie';
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserState } from "@/redux/userSlice";
 import authService from "@/services/authService";
 import { setAvailabilityState } from "@/redux/availabilitySlice";
 import { useRouter } from "next/router";
 import { IRootState } from "@/redux/store";
 import { initialState, setChatState } from "@/redux/chatSlice";
+import { setLogout, setUserState } from "@/redux/userSlice";
+
 
 
 const Header = () => {
@@ -17,31 +18,22 @@ const Header = () => {
   const dispatch = useDispatch();
   const user = Cookies.get('id');
   const router = useRouter();
-  const {name} = useSelector((state:IRootState)=> state.userStore.mainUser);
+  const {name, photo} = useSelector((state:IRootState)=> state.userStore.mainUser);
 
   const getAccessToken = () => {
     return Cookies.get('accessToken');
   };
 
 
-  const handleLogOut =  async () => {
+  const handleLogOut = async () => {
     try {
       await authService.logout(user as string);
-      Cookies.remove('accessToken');
-      Cookies.remove('refreshToken');
-      Cookies.remove('id');
-      dispatch(setUserState({}));
+      dispatch(setLogout({}));
       dispatch(setAvailabilityState({}));
-      dispatch(setChatState(initialState));
-      router.push('/');
     } catch (error) {
       console.log(error);
-      Cookies.remove('accessToken');
-      Cookies.remove('refreshToken');
-      Cookies.remove('id');
-      dispatch(setUserState({}));
+      dispatch(setLogout({}));
       dispatch(setAvailabilityState({}));
-      dispatch(setChatState(initialState));
     }
 
   };
@@ -243,7 +235,7 @@ const Header = () => {
                     </g>
                   </svg>
                   <h2 className="hidden sm:block text-base text-white font-bold leading-normal pl-3">
-                    <Link href="/appointment">The Logo</Link>
+                    <Link href="/appointment">SafeShot</Link>
                   </h2>
                 </div>
               </div>
@@ -494,10 +486,10 @@ const Header = () => {
                       )}
                       <div className="cursor-pointer flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-white transition duration-150 ease-in-out">
                         <Image
-                          width={10}
-                          height={10}
+                          width={210}
+                          height={210}
                           className="rounded-full h-10 w-10 object-cover"
-                          src="https://tuk-cdn.s3.amazonaws.com/assets/components/horizontal_navigation/hn_2.png"
+                          src={photo || "https://tuk-cdn.s3.amazonaws.com/assets/components/horizontal_navigation/hn_2.png"}
                           alt="logo"
                         />
                         <span className='font-bold text-white px-2 my-3'>{name}</span>

@@ -67,8 +67,6 @@ const Login = (): JSX.Element => {
                             </h1>
 
                             <form className='space-y-4 md:space-y-6' onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
-
-{console.log("errors: ",errors) as ReactNode}
                                 <FormControl isInvalid={errors.email?.message as undefined} isRequired>
                                     <FormLabel className='block mb-2 text-sm font-medium text-green-900'>Email</FormLabel>
                                     <Input {...register("email")} placeholder='johndoe@example.com' className='bg-green-100 border border-green-300 text-green-900 sm:text-sm rounde-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5' />

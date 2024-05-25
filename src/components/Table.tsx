@@ -18,9 +18,6 @@ import { IRootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import Loader from "../../public/assets/loader.gif";
 
-
-
-
 const columnHelper = createColumnHelper<AppointmentsPropType>()
 
 const columns = [
@@ -77,7 +74,7 @@ function Table({ data, pagination, setPagination,isLoading, links, setCurrentIte
 
 
   const handleSelectChange = (data: string) => {
-    setPagination((prv) => ({ ...prv, limit: data }))
+    setPagination((prv) => ({ ...prv, ['page']: 1, limit: data }));
   };
 
   const getPaginationDetails = () => {
@@ -112,11 +109,15 @@ function Table({ data, pagination, setPagination,isLoading, links, setCurrentIte
     setModalVisible((prv) => ({ ...prv, ["review"]: true }));
   };
 
+  // if(!data){
+  //   return <p>Loading...</p>
+  // }
+
   return (
     <div>
     
-      <table className=' w-full border-x-neutral-100 border'>
-        <thead className='p-5'>
+      <table className={` w-full border-x-neutral-100 border`}>
+        <thead className={`p-5 `}>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header, idx) => (
@@ -185,10 +186,10 @@ function Table({ data, pagination, setPagination,isLoading, links, setCurrentIte
 
             <p className='mr-5 self-center font-medium'>Row Per page</p>
             <div className='mr-5 self-center'>
-              <Select defaultValue={pagination?.limit} onChange={(event) => handleSelectChange(event.target.value)}>
+              <Select value={pagination?.limit} onChange={(event) => handleSelectChange(event.target.value)}>
                 {tableDataRange.map((row, idx) => <option
-                  disabled={checkDisable(getPaginationDetails().to, parseInt(pagination?.totalItems))
-                    && (row > parseInt(pagination?.totalItems))}
+                  // disabled={checkDisable(getPaginationDetails().to, parseInt(pagination?.totalItems))
+                  //   && (row > parseInt(pagination?.totalItems))}
                   key={idx} value={row}>{row}</option>)}
               </Select>
             </div>

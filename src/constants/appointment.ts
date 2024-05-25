@@ -6,7 +6,7 @@ export const userStatus = Object.freeze(['All', 'Approved', 'Pending', 'Blocked'
 export const notSortableAppointmentItems = Object.freeze(["_id", "status", ]);
 export const notSortableUserItems = Object.freeze(["id", "_id", "status", "vaccine"]);
 
-export const defaultPagination = Object.freeze({
+export const defaultPagination = {
   limit: '15',
   page: 1,
   totalItems: '',
@@ -15,7 +15,7 @@ export const defaultPagination = Object.freeze({
   sort_by: '',
   search: '',
   status: 'all',
-});
+};
 
 
 // export const paginationState = {

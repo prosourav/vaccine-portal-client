@@ -8,7 +8,6 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Loader from "../../public/assets/loader.gif";
 import Image from 'next/image';
 import { capitalizeFirstLetter } from '@/utils/convertToCap';
-import { menus } from '@/constants/user';
 import { VaccineType, vaccineTablePropType } from '@/types/vaccine';
 import moment from 'moment';
 
@@ -20,7 +19,7 @@ const columnHelper = createColumnHelper<VaccineType>()
   const columns = React.useMemo(
     () => [
       columnHelper.accessor('_id', { //accessorKey
-        cell: info => `#${info.getValue().substring(info.getValue()?.length - 14)}`,
+        cell: info => `#${info.getValue().substring(info?.getValue()?.length - 14)}`,
         header: () => <span>Vaccine Id</span>
       }),
       columnHelper.accessor(row => row.name, {
@@ -62,6 +61,9 @@ const columnHelper = createColumnHelper<VaccineType>()
       handleSortChange()
     }
   }, [handleSortChange, sorting]);
+
+
+  // if(!data) return <p>Loading...</p>
 
 
   return (
@@ -114,8 +116,8 @@ const columnHelper = createColumnHelper<VaccineType>()
                   ))}
                 </tr>
               )) :  <tr>
-              <td colSpan={columns.length}>
-                {isLoading && <p className='text-center font-bold my-10'>Loading...'</p>} 
+              <td colSpan={columns?.length}>
+                {isLoading && <p className='text-center font-bold my-10'>Loading...</p>} 
               </td>
             </tr>
               }

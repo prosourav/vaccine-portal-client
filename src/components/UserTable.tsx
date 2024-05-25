@@ -51,14 +51,9 @@ const columnHelper = createColumnHelper<UsersPropType>()
                 </MenuButton>
 
                 <MenuList>
-                  {/* <MenuItem onClick={() => handleView(info.row.original)}> View </MenuItem>
-
-                  <MenuItem onClick={() => handleEdit(info.row.original)}> Edit </MenuItem>
-
-                  <MenuItem onClick={() => handleDelete(info.row.original)}>Delete</MenuItem> */}
 
                   {
-                    menus.map((item: string) => <MenuItem onClick={() => handleOperation(item, info.row.original)}>{item}</MenuItem>)
+                    menus.map((item: string, idx) => <MenuItem key={idx} onClick={() => handleOperation(item, info.row.original)}>{item}</MenuItem>)
                   }
 
                 </MenuList>
@@ -122,6 +117,7 @@ const columnHelper = createColumnHelper<UsersPropType>()
     }
   };
   
+  // if(!data) return <p>Loading...</p>
 
   return (
     <div>
@@ -165,7 +161,7 @@ const columnHelper = createColumnHelper<UsersPropType>()
             <tbody className='bg-white'>
               {!!data?.length ?
                table.getRowModel().rows.map(row => (
-                <tr key={row.id} className=' h-10 py-3 border border-gray-200'>
+                <tr key={row.index} className=' h-10 py-3 border border-gray-200'>
                   {row.getVisibleCells().map((cell, idx) => (
                     <td key={idx} className='text-center'>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -173,8 +169,8 @@ const columnHelper = createColumnHelper<UsersPropType>()
                   ))}
                 </tr>
               )) :  <tr>
-              <td colSpan={columns.length}>
-                {isLoading && <p className='text-center font-bold my-10'>Loading...'</p>} 
+              <td colSpan={columns?.length}>
+                {isLoading && <p className='text-center font-bold my-10'>Loading...</p>} 
               </td>
             </tr>
               }

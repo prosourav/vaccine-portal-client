@@ -2,7 +2,7 @@
 const nextConfig = {
   // reactStrictMode: false,
   images: {
-    domains: ['tuk-cdn.s3.amazonaws.com','png.pngtree.com','e7.pngegg.com'],
+    domains: ['vaccine-app.s3.ap-south-1.amazonaws.com', 'tuk-cdn.s3.amazonaws.com','png.pngtree.com','e7.pngegg.com'],
   }
 }
 

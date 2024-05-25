@@ -43,7 +43,7 @@ const UserListing = () => {
   useEffect(() => {
     if (pagination.page == 1) {
       setTableData(data?.data);
-    } else if (data?.data.length && Array.isArray(data?.data)) {
+    } else if (data?.data?.length && Array.isArray(data?.data)) {
       const oldData = tableData;
       const newData = data?.data;
       const updatedData = oldData.concat(newData);
