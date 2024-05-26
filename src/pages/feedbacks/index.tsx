@@ -94,26 +94,27 @@ export default function FeedBackPage() {
 
     
   return (
-    <div id='scrollableDiv' style={{ overflowY:  'scroll', height: `600px`, background: 'white'  }}>
-      {!!allreviews?.length && <h1 className='center'>No data found!</h1>}
-       <InfiniteScroll
-          dataLength={allreviews?.length}
-          next={() => setPagination(prv => ({ ...prv, page: prv.page  + 1 }))}
-          hasMore={!!data?.pagination?.next} // Replace with a condition based on your data source
-          loader={data?.reviews?.length > 5  && <Image src={Loader} alt='' height={80} width={120} className='text-center mx-auto'/>}
-          endMessage={data?.reviews?.length > 5 && !isLoading && <p className='text-center mx-auto bg-green-500 py-4 font-bold text-white'>No more data to load</p>}
-          scrollableTarget="scrollableDiv"
-        >
-       {
-        allreviews?.map((item: ReviewType, idx: number) =>(
-          (role == 'admin' || item.status=='approved') &&  <ReviewBox key={idx} 
-            data={item} image={vaccineImage}
-            handleReject={handleReject}
-            handleApprove={handleApprove}
-          />
-        ))
-       }
-        </InfiniteScroll>
-      </div>
+    <h1>Hello from feed back</h1>
+    // <div id='scrollableDiv' style={{ overflowY:  'scroll', height: `600px`, background: 'white'  }}>
+    //   {!!allreviews?.length && <h1 className='center'>No data found!</h1>}
+    //    <InfiniteScroll
+    //       dataLength={allreviews?.length}
+    //       next={() => setPagination(prv => ({ ...prv, page: prv.page  + 1 }))}
+    //       hasMore={!!data?.pagination?.next} // Replace with a condition based on your data source
+    //       loader={data?.reviews?.length > 5  && <Image src={Loader} alt='' height={80} width={120} className='text-center mx-auto'/>}
+    //       endMessage={data?.reviews?.length > 5 && !isLoading && <p className='text-center mx-auto bg-green-500 py-4 font-bold text-white'>No more data to load</p>}
+    //       scrollableTarget="scrollableDiv"
+    //     >
+    //    {
+    //     allreviews?.map((item: ReviewType, idx: number) =>(
+    //       (role == 'admin' || item.status=='approved') &&  <ReviewBox key={idx} 
+    //         data={item} image={vaccineImage}
+    //         handleReject={handleReject}
+    //         handleApprove={handleApprove}
+    //       />
+    //     ))
+    //    }
+    //     </InfiniteScroll>
+    //   </div>
   )
 };
