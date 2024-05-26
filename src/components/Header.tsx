@@ -16,7 +16,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const user = Cookies.get('id');
   const router = useRouter();
-  const {name, photo} = useSelector((state:IRootState)=> state.userStore.mainUser);
+  const { name, photo } = useSelector((state: IRootState) => state.userStore.mainUser);
 
   const getAccessToken = () => {
     return Cookies.get('accessToken');
@@ -25,14 +25,14 @@ const Header = () => {
 
   const handleLogOut = async () => {
     try {
-     await authService.logout(user as string);
+      await authService.logout(user as string);
       dispatch(setLogout({}));
       dispatch(setAvailabilityState({}));
-      router.push('/auth/login');
+      return router.push('/auth/login');
     } catch (error) {
       dispatch(setLogout({}));
       dispatch(setAvailabilityState({}));
-      router.push('/auth/login');
+      return router.push('/auth/login');
     }
 
   };
@@ -408,7 +408,7 @@ const Header = () => {
                                 <circle cx={12} cy={7} r={4} />
                                 <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
                               </svg>
-                              <span className="ml-2" onClick={()=>router.push("/profile")}>My Profile</span>
+                              <span className="ml-2" onClick={() => router.push("/profile")}>My Profile</span>
                             </div>
                           </li>
                           <li
@@ -500,7 +500,7 @@ const Header = () => {
             </div>
           </div>
         </nav>
-      
+
       </div>
     </>
   );
