@@ -66,7 +66,6 @@ instance.interceptors.response.use(
 
 
 
-
 const responseBody = (response: AxiosResponse) => response.data;
 
 const requests = {
