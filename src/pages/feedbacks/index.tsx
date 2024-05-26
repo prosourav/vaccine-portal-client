@@ -95,7 +95,7 @@ export default function FeedBackPage() {
 
   return (
     <div id='scrollableDiv' style={{ overflowY: 'scroll', height: `600px`, background: 'white' }}>
-      {!allreviews?.length ? <h1 className='center'>No data found!</h1> :
+      {!allreviews?.length ? <h1 className='text-2xl font-bold ml-auto'>No data found!</h1> :
         <InfiniteScroll
           dataLength={allreviews?.length}
           next={() => setPagination(prv => ({ ...prv, page: prv.page + 1 }))}
