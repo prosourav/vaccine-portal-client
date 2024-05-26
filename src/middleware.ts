@@ -5,13 +5,14 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('accessToken') as Record<string, string | undefined>;
 
   if (!token && routes.protected.includes(request.nextUrl.pathname)) {
-    const absoluteUrl = new URL("/auth/login",request.nextUrl.origin);
-      return NextResponse.redirect(absoluteUrl.toString());
+    return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  if(token && routes.auth.includes(request.nextUrl.pathname)) {
-    const absoluteUrl = new URL("/",request.nextUrl.origin);
-      return NextResponse.redirect(absoluteUrl.toString());
+  if (token && routes.auth.includes(request.nextUrl.pathname)) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
+
+  return NextResponse.next();
+
 }
 

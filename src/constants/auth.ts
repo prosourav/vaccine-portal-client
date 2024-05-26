@@ -1,11 +1,11 @@
-export const routes =  Object.freeze(
+export const routes = Object.freeze(
   {
-    protected:["/","/appointment", "/availability", "/vaccine", "/users", '/chat','/profile', '/feedbacks',], 
-    auth:['/auth/login', '/auth/register']
+    protected: ["/", "", "/appointment", "/availability", "/vaccine", "/users", '/chat', '/profile', '/feedback',],
+    auth: ['/auth/login', '/auth/register']
   }
-  );
+);
 
 export const defaultValues = {
-    email: "",
-    password: "",
+  email: "",
+  password: "",
 };
