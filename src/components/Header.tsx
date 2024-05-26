@@ -25,7 +25,7 @@ const Header = () => {
 
   const handleLogOut = async () => {
     try {
-      await authService.logout(user as string);
+      // await authService.logout(user as string);
       dispatch(setLogout({}));
       dispatch(setAvailabilityState({}));
       return router.push('/auth/login');
