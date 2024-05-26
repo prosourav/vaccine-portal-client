@@ -32,7 +32,7 @@ export default function FeedBackPage() {
   const { role } = useSelector((state: IRootState) => state.userStore.mainUser);
   const [updated, setUpdated] = useState(false);
   const [allreviews, setAllreviews] = useState([] as any[]);
-  
+
   const getAllreview = useCallback(() => {
     const query = `${pagination.page ? `?page=${pagination.page}` : ''}${pagination.limit ? `&limit=${pagination.limit}`
       : ''}${pagination.sort_by ? `&sort_by=${pagination.sort_by}`
@@ -44,77 +44,76 @@ export default function FeedBackPage() {
 
   const { data, error, isLoading, isError, isSuccess } = useFetch(getAllreview);
 
-  useEffect(()=>{
-   if(data?.reviews.length > 0) {
+  useEffect(() => {
+    if (data?.reviews.length > 0) {
       const newData = data?.reviews;
-      return setAllreviews([...allreviews,...newData]);
-   }
-  },[data]);
+      return setAllreviews([...allreviews, ...newData]);
+    }
+  }, [data]);
 
   const handleApprove = async (data: string) => {
-      const payload = {status: "approved"};
-      try {
-         const response = await reviewService.editReview(data,payload);
-         toast({
-          title: response.message,
-          position: 'top-right',
-          status: 'success',
-          isClosable: true,
-        });
-        setUpdated(prv => !prv);
-      } catch (error: any) {
-        toast({
-          title: error.message,
-          position: 'top-right',
-          status: 'error',
-          isClosable: true,
-        });
-      }
+    const payload = { status: "approved" };
+    try {
+      const response = await reviewService.editReview(data, payload);
+      toast({
+        title: response.message,
+        position: 'top-right',
+        status: 'success',
+        isClosable: true,
+      });
+      setUpdated(prv => !prv);
+    } catch (error: any) {
+      toast({
+        title: error.message,
+        position: 'top-right',
+        status: 'error',
+        isClosable: true,
+      });
+    }
   };
 
   const handleReject = async (data: string) => {
-      try {
-          await reviewService.deleteReview(data);
-          toast({
-            title: 'Review deleted successfully',
-            position: 'top-right',
-            status: 'success',
-            isClosable: true,
-          });
-        setUpdated(prv => !prv);
-      } catch (error: any) {
-          toast({
-            title: error.message,
-            position: 'top-right',
-            status: 'error',
-            isClosable: true,
-          });
-      }
+    try {
+      await reviewService.deleteReview(data);
+      toast({
+        title: 'Review deleted successfully',
+        position: 'top-right',
+        status: 'success',
+        isClosable: true,
+      });
+      setUpdated(prv => !prv);
+    } catch (error: any) {
+      toast({
+        title: error.message,
+        position: 'top-right',
+        status: 'error',
+        isClosable: true,
+      });
+    }
   };
 
-    
+
   return (
-    <h1>Hello from feed back</h1>
-    // <div id='scrollableDiv' style={{ overflowY:  'scroll', height: `600px`, background: 'white'  }}>
-    //   {!!allreviews?.length && <h1 className='center'>No data found!</h1>}
-    //    <InfiniteScroll
-    //       dataLength={allreviews?.length}
-    //       next={() => setPagination(prv => ({ ...prv, page: prv.page  + 1 }))}
-    //       hasMore={!!data?.pagination?.next} // Replace with a condition based on your data source
-    //       loader={data?.reviews?.length > 5  && <Image src={Loader} alt='' height={80} width={120} className='text-center mx-auto'/>}
-    //       endMessage={data?.reviews?.length > 5 && !isLoading && <p className='text-center mx-auto bg-green-500 py-4 font-bold text-white'>No more data to load</p>}
-    //       scrollableTarget="scrollableDiv"
-    //     >
-    //    {
-    //     allreviews?.map((item: ReviewType, idx: number) =>(
-    //       (role == 'admin' || item.status=='approved') &&  <ReviewBox key={idx} 
-    //         data={item} image={vaccineImage}
-    //         handleReject={handleReject}
-    //         handleApprove={handleApprove}
-    //       />
-    //     ))
-    //    }
-    //     </InfiniteScroll>
-    //   </div>
+    <div id='scrollableDiv' style={{ overflowY: 'scroll', height: `600px`, background: 'white' }}>
+      {!allreviews?.length ? <h1 className='center'>No data found!</h1> :
+        <InfiniteScroll
+          dataLength={allreviews?.length}
+          next={() => setPagination(prv => ({ ...prv, page: prv.page + 1 }))}
+          hasMore={!!data?.pagination?.next} // Replace with a condition based on your data source
+          loader={data?.reviews?.length > 5 && <Image src={Loader} alt='' height={80} width={120} className='text-center mx-auto' />}
+          endMessage={data?.reviews?.length > 5 && !isLoading && <p className='text-center mx-auto bg-green-500 py-4 font-bold text-white'>No more data to load</p>}
+          scrollableTarget="scrollableDiv"
+        >
+          {
+            allreviews?.map((item: ReviewType, idx: number) => (
+              (role == 'admin' || item.status == 'approved') && <ReviewBox key={idx}
+                data={item} image={vaccineImage}
+                handleReject={handleReject}
+                handleApprove={handleApprove}
+              />
+            ))
+          }
+        </InfiniteScroll>}
+    </div>
   )
 };
