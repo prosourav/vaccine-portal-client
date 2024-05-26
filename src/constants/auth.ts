@@ -6,6 +6,6 @@ export const routes = Object.freeze(
 );
 
 export const defaultValues = {
-  email: "",
-  password: "",
+  email: "dev.souravsaha@gmail.com",
+  password: "Test@123",
 };

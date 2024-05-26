@@ -30,6 +30,14 @@ const Login = (): JSX.Element => {
 
     const onSubmit = async (data: formDataLogin) => {
         try {
+            if(data.email==='dev.souravsaha@gmail.com'){
+                toast({
+                    title: `You are signing in as admin `,
+                    position: 'top-right',
+                    status: 'warning',
+                    isClosable: true,
+                })
+            }
             const response = await authService.login(data as formDataLogin);
             saveCookies({ id: response.data.id, atoken: response.data.token.accessToken, rtoken: response.data.token.refreshToken });
             dispatch(setUserState(response.data));
@@ -37,7 +45,7 @@ const Login = (): JSX.Element => {
         } catch (error: any) {
             // console.log("error: ", error);
             toast({
-                title: `${error?.response.data.message}`,
+                title: `${error?.response?.data.message}`,
                 position: 'top-right',
                 status: 'error',
                 isClosable: true,
