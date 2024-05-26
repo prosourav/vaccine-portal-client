@@ -28,10 +28,11 @@ const Header = () => {
      await authService.logout(user as string);
       dispatch(setLogout({}));
       dispatch(setAvailabilityState({}));
+      router.push('/auth/login');
     } catch (error) {
-      // console.log(error);
       dispatch(setLogout({}));
       dispatch(setAvailabilityState({}));
+      router.push('/auth/login');
     }
 
   };
