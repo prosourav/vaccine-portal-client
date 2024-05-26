@@ -1,5 +1,5 @@
 import saveCookies from '@/utils/cookieSaver';
-import axios, { AxiosHeaderValue, AxiosResponse, HeadersDefaults } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 import { setAvailabilityState } from '@/redux/availabilitySlice';
 import { store } from '@/redux/store';

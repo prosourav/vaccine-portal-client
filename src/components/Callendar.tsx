@@ -72,7 +72,7 @@ const Calendar: React.FC<CustomCalendarProps> = ({ events, handleEventClick }) =
           onSelectEvent={handleEventClick}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: 590 }}
+          style={{ height: 550 }}
           eventPropGetter={eventStyleGetter}
         />
       </div>

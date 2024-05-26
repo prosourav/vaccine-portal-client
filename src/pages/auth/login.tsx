@@ -1,19 +1,16 @@
 
-import { Button, Checkbox, FormControl, FormErrorMessage, FormLabel, Input, Text, useToast } from '@chakra-ui/react';
+import { Button, FormControl, FormErrorMessage, FormLabel, Input, Text, useToast } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useForm } from "react-hook-form"
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import authService from '@/services/authService';
 import { formDataLogin } from '@/types/login';
 import { useDispatch } from 'react-redux';
 import { setUserState } from '@/redux/userSlice';
-import Cookies from 'js-cookie';
 import saveCookies from '@/utils/cookieSaver';
 import { useRouter } from 'next/router';
 import { formSchema } from '@/Schema/login';
 import { defaultValues } from '@/constants/auth';
-import { ReactNode } from 'react';
 
 
 const Login = (): JSX.Element => {

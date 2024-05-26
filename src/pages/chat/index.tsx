@@ -126,7 +126,7 @@ useEffect(() => {
 
 // all realtime socket connections
   useEffect(()=>{
-    socket.current = io('ws://localhost:9000');
+    socket.current = io('https://safeshot-socket.onrender.com');
     socket.current.emit("addUser", user);
     socket.current.on("getUsers", users => {
      dispatch(setChatState({

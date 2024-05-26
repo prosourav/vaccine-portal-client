@@ -7,13 +7,11 @@ import authService from "@/services/authService";
 import { setAvailabilityState } from "@/redux/availabilitySlice";
 import { useRouter } from "next/router";
 import { IRootState } from "@/redux/store";
-import { initialState, setChatState } from "@/redux/chatSlice";
-import { setLogout, setUserState } from "@/redux/userSlice";
+import { setLogout } from "@/redux/userSlice";
 
 
 
 const Header = () => {
-  const [show, setShow] = useState<Boolean>();
   const [profile, setProfile] = useState<Boolean>(false);
   const dispatch = useDispatch();
   const user = Cookies.get('id');
@@ -27,11 +25,11 @@ const Header = () => {
 
   const handleLogOut = async () => {
     try {
-      await authService.logout(user as string);
+     await authService.logout(user as string);
       dispatch(setLogout({}));
       dispatch(setAvailabilityState({}));
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       dispatch(setLogout({}));
       dispatch(setAvailabilityState({}));
     }
