@@ -28,7 +28,7 @@ const Sidebar = () => {
     {
       key: 'pr647',
       name: 'Appointments',
-      icon: <MdMeetingRoom />,
+      icon: (<MdMeetingRoom />),
       href: '/appointment',
     },
     {
